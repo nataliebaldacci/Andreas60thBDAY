@@ -314,7 +314,7 @@ img { max-width: 100%; }
 form { display: flex; flex-direction: column; gap: 16px; }
 label, .lbl { font-family: var(--caps); font-size: 15px; letter-spacing: .14em; color: var(--muted); display: flex; flex-direction: column; gap: 6px; }
 .hint { font-family: var(--serif); font-style: italic; letter-spacing: 0; font-size: 15px; color: var(--muted); opacity: .85; }
-input[type=text], textarea, select {
+input[type=text], input[type=email], textarea, select {
   font: inherit;
   font-size: 18px;
   color: var(--text);
@@ -468,6 +468,10 @@ footer { font-family: var(--caps); font-size: 14px; letter-spacing: .2em; color:
       </div>
       <label for="r-name">Your name(s)
         <input type="text" id="r-name" name="name" autocomplete="name" maxlength="100" required>
+      </label>
+      <label for="r-email">Your email
+        <span class="hint">For a reminder before the party. Only the host sees this.</span>
+        <input type="email" id="r-email" name="email" autocomplete="email" inputmode="email" maxlength="200">
       </label>
       <label for="r-party" id="party-row">How many in your party, including you?
         <select id="r-party" name="party">
@@ -673,8 +677,10 @@ footer { font-family: var(--caps); font-size: 14px; letter-spacing: .2em; color:
     const name = $('r-name').value.trim();
     if (!att) { st.className = 'status err'; st.textContent = 'Please choose yes or no.'; return; }
     if (!name) { st.className = 'status err'; st.textContent = 'Please enter your name.'; $('r-name').focus(); return; }
+    const email = $('r-email').value.trim();
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { st.className = 'status err'; st.textContent = 'That email doesn’t look right. Please check it.'; $('r-email').focus(); return; }
     const body = {
-      type: 'rsvp', attending: att.value, name,
+      type: 'rsvp', attending: att.value, name, email,
       party: $('r-party').value, look: $('r-look').value, note: $('r-note').value,
       website: $('r-website').value
     };
