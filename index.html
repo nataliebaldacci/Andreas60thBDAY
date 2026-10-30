@@ -613,7 +613,7 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
 
   <section class="panel" aria-labelledby="wall-h">
     <h2 id="wall-h">How We Met Andrea</h2>
-    <p class="intro">Share the moment you met her, or a favorite memory. Andrea will read them all after the party.</p>
+    <p class="intro">Tell us how you met Andrea, or share a favorite memory. It goes straight to the host, and we’ll save them all for Andrea.</p>
     <form id="memory-form" novalidate>
       <label for="m-name">Your name
         <input type="text" id="m-name" name="name" maxlength="100" required>
@@ -622,10 +622,9 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
         <textarea id="m-text" name="text" maxlength="600" required></textarea>
       </label>
       <div class="hp" aria-hidden="true"><label>Website <input type="text" id="m-website" name="website" tabindex="-1" autocomplete="off"></label></div>
-      <button class="btn solid" type="submit" id="memory-btn">Add to the wall</button>
+      <button class="btn solid" type="submit" id="memory-btn">Send my memory</button>
       <p class="status" id="memory-status" role="status"></p>
     </form>
-    <div class="wall" id="wall"></div>
   </section>
 
   <footer>Questions or outfit help? Message Natalie.</footer>
@@ -739,36 +738,15 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
     $('headcount-label').textContent = (data.headcount === 1 ? 'guest' : 'guests') + ' so far';
     const ul = $('names');
     ul.replaceChildren(...names.map(n => { const li = document.createElement('li'); li.textContent = n; return li; }));
-    const wall = $('wall');
-    const mem = data.memories || [];
-    if (!mem.length) {
-      const p = document.createElement('p');
-      p.className = 'empty';
-      p.textContent = 'No memories yet. Be the first!';
-      wall.replaceChildren(p);
-      return;
-    }
-    wall.replaceChildren(...mem.map(m => {
-      const fig = document.createElement('figure');
-      fig.className = 'memory';
-      fig.style.margin = '0';
-      const p = document.createElement('p');
-      p.textContent = m.text;
-      const c = document.createElement('cite');
-      c.textContent = m.name;
-      fig.append(p, c);
-      return fig;
-    }));
   }
 
   async function load() {
     try { render(await api()); }
     catch (e) {
       $('headcount').textContent = '–';
-      const p = document.createElement('p');
-      p.className = 'empty';
-      p.textContent = API_URL ? 'Could not load the guest list. Refresh to try again.' : 'The guest list will appear here soon.';
-      $('wall').replaceChildren(p);
+      const li = document.createElement('li');
+      li.textContent = 'Could not load the guest list. Refresh to try again.';
+      $('names').replaceChildren(li);
     }
   }
 
@@ -826,16 +804,15 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
     const name = $('m-name').value.trim(), text = $('m-text').value.trim();
     if (!name || !text) { st.className = 'status err'; st.textContent = 'Please add your name and a memory.'; return; }
     const btn = $('memory-btn');
-    btn.disabled = true; btn.textContent = 'Adding…'; st.textContent = '';
+    btn.disabled = true; btn.textContent = 'Sending…'; st.textContent = '';
     try {
       await api({ type: 'memory', name, text, website: $('m-website').value });
       $('m-text').value = '';
-      st.className = 'status ok'; st.textContent = 'Added. Thank you!';
-      load();
+      st.className = 'status ok'; st.textContent = 'Sent! Thank you. Andrea will love it.';
     } catch (err) {
       st.className = 'status err'; st.textContent = err.message;
     } finally {
-      btn.disabled = false; btn.textContent = 'Add to the wall';
+      btn.disabled = false; btn.textContent = 'Send my memory';
     }
   });
 
