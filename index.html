@@ -373,7 +373,7 @@ select option { color: #222; }
 .memory:nth-child(3n+2) { transform: rotate(.6deg); }
 .memory p { font-size: 18px; line-height: 1.45; overflow-wrap: anywhere; }
 .memory cite { font-style: normal; font-family: var(--script); font-size: 26px; color: var(--seal); align-self: flex-end; }
-.empty { text-align: center; font-style: italic; color: var(--muted); }
+.empty { text-align: center; font-style: italic; color: var(--muted); grid-column: 1 / -1; }
 
 footer { font-family: var(--caps); font-size: 14px; letter-spacing: .2em; color: var(--muted); text-align: center; margin-top: 12px; }
 
@@ -684,8 +684,11 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
   }
   themeBtn.addEventListener('click', () => setRetro(!document.body.classList.contains('retro')));
 
+  let turning = false;
   async function turnOver(fast) {
-    if (!presented) return;
+    if (!presented || turning) return;
+    turning = true;
+    setTimeout(() => { turning = false; }, fast || reduce ? 0 : 1300);
     revealed = !revealed;
     card.classList.toggle('flipped', revealed);
     setRetro(revealed);
