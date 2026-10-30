@@ -10,7 +10,7 @@
 <meta property="og:description" content="Break the seal to open your invitation.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+SC:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+SC:wght@500;600&family=Kaushan+Script&family=Oswald:wght@500;700&family=Poppins:wght@400;600&display=swap">
 <style>
 /* Layout: one envelope on a plum tablecloth; after the reveal, the party page continues below in the same palette. */
 :root {
@@ -377,6 +377,109 @@ select option { color: #222; }
 
 footer { font-family: var(--caps); font-size: 14px; letter-spacing: .2em; color: var(--muted); text-align: center; margin-top: 12px; }
 
+/* Throwback mode: the party page takes on the retro card's look once it is turned over */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity .8s ease;
+  background:
+    radial-gradient(ellipse at 15% 0%, rgba(255,61,154,.28), transparent 45%),
+    radial-gradient(ellipse at 90% 20%, rgba(62,224,230,.18), transparent 40%),
+    radial-gradient(circle, rgba(255,255,255,.06) 1px, transparent 1.5px) 0 0 / 22px 22px,
+    #0b1424;
+}
+body.retro::before { opacity: 1; }
+body.retro .party, body.retro .controls {
+  --panel: #0e1830;
+  --line: #ff4fa3;
+  --text: #fff6e9;
+  --muted: #ffd0e6;
+  --gold: #f6c93c;
+  --gold-hi: #ffd84a;
+  --card: #fffdf6;
+  --ink: #1b1b2e;
+  --seal: #e2377f;
+  --script: "Kaushan Script", "Brush Script MT", cursive;
+  --serif: "Poppins", "Avenir Next", "Helvetica Neue", sans-serif;
+  --caps: "Oswald", "Avenir Next Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--serif);
+  font-size: 17px;
+}
+body.retro .panel {
+  position: relative;
+  border: 3px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 6px 6px 0 var(--gold-hi);
+  padding-top: calc(clamp(20px, 5vw, 32px) + 12px);
+  overflow: hidden;
+}
+body.retro .panel::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 12px;
+  background: repeating-conic-gradient(#ffd84a 0 25%, #3a1030 0 50%) 0 0 / 12px 12px;
+}
+body.retro .panel h2 { color: var(--line); text-shadow: 3px 3px 0 #000; font-size: clamp(34px, 9vw, 46px); transform: rotate(-2deg); }
+body.retro .panel .intro, body.retro .hint { font-style: normal; }
+body.retro label, body.retro .lbl, body.retro .countdown .label, body.retro .clock span, body.retro .headcount span { letter-spacing: .08em; text-transform: uppercase; font-weight: 500; }
+body.retro label, body.retro .lbl { color: var(--gold-hi); font-size: 15px; }
+body.retro .hint { text-transform: none; letter-spacing: 0; color: var(--muted); font-weight: 400; font-size: 13px; }
+body.retro .clock b, body.retro .headcount b { font-family: var(--caps); font-weight: 700; color: var(--gold-hi); text-shadow: 3px 3px 0 var(--line); }
+body.retro input[type=text], body.retro input[type=email], body.retro textarea, body.retro select { background: #121e3a; border: 2px solid #3ee0e6; border-radius: 10px; font-size: 16px; }
+body.retro .choice label { font-family: var(--serif); text-transform: none; letter-spacing: 0; color: var(--text); border: 2px solid #3ee0e6; font-size: 16px; }
+body.retro .choice label:has(input:checked) { background: var(--gold-hi); border-color: var(--gold-hi); color: #0b1424; }
+body.retro .btn { font-family: var(--caps); text-transform: uppercase; letter-spacing: .08em; font-weight: 500; color: var(--gold-hi); border: 2px solid var(--gold-hi); }
+body.retro .btn.solid { background: var(--line); color: #fff; border-color: var(--line); box-shadow: 3px 3px 0 var(--gold-hi); font-weight: 700; }
+body.retro .names li { border: 2px solid #3ee0e6; color: var(--gold-hi); font-family: var(--caps); letter-spacing: .04em; }
+body.retro .memory { padding: 14px 14px 18px; border-radius: 2px; box-shadow: 4px 6px 0 rgba(0,0,0,.45); }
+body.retro .memory p { font-size: 15px; }
+body.retro .memory cite { font-size: 22px; color: var(--seal); }
+body.retro .done p:first-child { color: var(--line); text-shadow: 2px 2px 0 #000; }
+body.retro footer { color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+body.retro .skip { color: var(--muted); font-family: var(--serif); }
+
+/* Classic / Throwback switch */
+.themeswitch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: 0;
+  padding: 6px 4px;
+  cursor: pointer;
+  font-family: var(--caps);
+  font-size: 15px;
+  letter-spacing: .12em;
+  color: var(--muted);
+}
+.themeswitch .track {
+  width: 46px;
+  height: 26px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.18);
+  border: 1px solid var(--line);
+  position: relative;
+  transition: background .3s ease;
+}
+.themeswitch .knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--gold-hi);
+  transition: transform .3s ease;
+}
+.themeswitch[aria-checked="true"] .track { background: #ff4fa3; }
+.themeswitch[aria-checked="true"] .knob { transform: translateX(20px); background: #ffd84a; }
+.themeswitch:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 3px; border-radius: 8px; }
+.switchrow { width: 100%; display: flex; justify-content: center; }
+
 #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 20; }
 @media (prefers-reduced-motion: reduce) {
   .piece, .flap, .cardwrap, .card, .seal .half, .turn { transition: none; }
@@ -443,6 +546,11 @@ footer { font-family: var(--caps); font-size: 14px; letter-spacing: .2em; color:
 <div class="controls" id="controls" hidden>
   <a class="btn solid" href="#rsvp">RSVP below</a>
   <button class="btn" id="again" type="button">Turn back over</button>
+  <div class="switchrow">
+    <button class="themeswitch" id="theme" type="button" role="switch" aria-checked="false">
+      <span>Classic</span><span class="track" aria-hidden="true"><span class="knob"></span></span><span>Throwback</span>
+    </button>
+  </div>
 </div>
 
 <div class="party" id="party" hidden>
@@ -569,10 +677,18 @@ footer { font-family: var(--caps); font-size: 14px; letter-spacing: .2em; color:
     if (!fast) card.focus({ preventScroll: true });
   }
 
+  const themeBtn = $('theme');
+  function setRetro(on) {
+    document.body.classList.toggle('retro', on);
+    themeBtn.setAttribute('aria-checked', String(on));
+  }
+  themeBtn.addEventListener('click', () => setRetro(!document.body.classList.contains('retro')));
+
   async function turnOver(fast) {
     if (!presented) return;
     revealed = !revealed;
     card.classList.toggle('flipped', revealed);
+    setRetro(revealed);
     if (revealed && !fast) {
       await wait(900);
       if (!reduce) burst();
