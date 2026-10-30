@@ -586,14 +586,6 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
           <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
         </select>
       </label>
-      <label for="r-look">What throwback look are you planning?
-        <span class="hint">Top secret. Only the host sees this.</span>
-        <input type="text" id="r-look" name="look" maxlength="500">
-      </label>
-      <label for="r-note">Anything else we should know?
-        <span class="hint">Dietary needs, questions, a note for the host.</span>
-        <textarea id="r-note" name="note" maxlength="1000"></textarea>
-      </label>
       <div class="hp" aria-hidden="true"><label>Website <input type="text" id="r-website" name="website" tabindex="-1" autocomplete="off"></label></div>
       <button class="btn solid" type="submit" id="rsvp-btn">Send my RSVP</button>
       <p class="status" id="rsvp-status" role="status"></p>
@@ -612,19 +604,20 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
   </section>
 
   <section class="panel" aria-labelledby="wall-h">
-    <h2 id="wall-h">How We Met Andrea</h2>
-    <p class="intro">Tell us how you met Andrea, or share a favorite memory. It goes straight to the host, and we’ll save them all for Andrea.</p>
+    <h2 id="wall-h">Message Board</h2>
+    <p class="intro">Want to add a message for the message board?</p>
     <form id="memory-form" novalidate>
       <label for="m-name">Your name
         <input type="text" id="m-name" name="name" maxlength="100" required>
       </label>
-      <label for="m-text">Your memory
+      <label for="m-text">Your message for Andrea
         <textarea id="m-text" name="text" maxlength="600" required></textarea>
       </label>
       <div class="hp" aria-hidden="true"><label>Website <input type="text" id="m-website" name="website" tabindex="-1" autocomplete="off"></label></div>
-      <button class="btn solid" type="submit" id="memory-btn">Send my memory</button>
+      <button class="btn solid" type="submit" id="memory-btn">Post my message</button>
       <p class="status" id="memory-status" role="status"></p>
     </form>
+    <div class="wall" id="wall"></div>
   </section>
 
   <footer>Questions or outfit help? Message Natalie.</footer>
@@ -738,6 +731,26 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
     $('headcount-label').textContent = (data.headcount === 1 ? 'guest' : 'guests') + ' so far';
     const ul = $('names');
     ul.replaceChildren(...names.map(n => { const li = document.createElement('li'); li.textContent = n; return li; }));
+    const wall = $('wall');
+    const mem = data.memories || [];
+    if (!mem.length) {
+      const p = document.createElement('p');
+      p.className = 'empty';
+      p.textContent = 'No messages yet. Be the first!';
+      wall.replaceChildren(p);
+      return;
+    }
+    wall.replaceChildren(...mem.map(m => {
+      const fig = document.createElement('figure');
+      fig.className = 'memory';
+      fig.style.margin = '0';
+      const p = document.createElement('p');
+      p.textContent = m.text;
+      const c = document.createElement('cite');
+      c.textContent = m.name;
+      fig.append(p, c);
+      return fig;
+    }));
   }
 
   async function load() {
@@ -778,7 +791,7 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { st.className = 'status err'; st.textContent = 'That email doesn’t look right. Please check it.'; $('r-email').focus(); return; }
     const body = {
       type: 'rsvp', attending: att.value, name, email,
-      party: $('r-party').value, look: $('r-look').value, note: $('r-note').value,
+      party: $('r-party').value,
       website: $('r-website').value
     };
     const btn = $('rsvp-btn');
@@ -802,17 +815,18 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
     e.preventDefault();
     const st = $('memory-status');
     const name = $('m-name').value.trim(), text = $('m-text').value.trim();
-    if (!name || !text) { st.className = 'status err'; st.textContent = 'Please add your name and a memory.'; return; }
+    if (!name || !text) { st.className = 'status err'; st.textContent = 'Please add your name and a message.'; return; }
     const btn = $('memory-btn');
     btn.disabled = true; btn.textContent = 'Sending…'; st.textContent = '';
     try {
       await api({ type: 'memory', name, text, website: $('m-website').value });
       $('m-text').value = '';
-      st.className = 'status ok'; st.textContent = 'Sent! Thank you. Andrea will love it.';
+      st.className = 'status ok'; st.textContent = 'Posted! Thank you. Andrea will love it.';
+      load();
     } catch (err) {
       st.className = 'status err'; st.textContent = err.message;
     } finally {
-      btn.disabled = false; btn.textContent = 'Send my memory';
+      btn.disabled = false; btn.textContent = 'Post my message';
     }
   });
 
