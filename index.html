@@ -1151,7 +1151,7 @@ html body .party input[type=file]::file-selector-button { font-family: inherit; 
     const email = $('r-email').value.trim();
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { st.className = 'status err'; st.textContent = 'That email doesn’t look right. Please check it.'; $('r-email').focus(); return; }
     const body = {
-      type: 'rsvp', attending: att.value, name, email,
+      type: 'rsvp', attending: att.value, name, email, message: $('r-msg').value.trim(),
       party: $('r-party').value,
       website: $('r-website').value
     };
@@ -1159,8 +1159,7 @@ html body .party input[type=file]::file-selector-button { font-family: inherit; 
     btn.disabled = true; btn.textContent = 'Sending…'; st.textContent = '';
     try {
       await api(body);
-      const msg = $('r-msg').value.trim();
-      if (msg) { await api({ type: 'memory', name, text: msg, website: '' }); $('r-msg').value = ''; }
+      $('r-msg').value = '';
       store.set('rsvp', JSON.stringify({ attending: att.value, name }));
       showDone({ attending: att.value, name });
       if (att.value === 'yes' && !reduce) burst();
