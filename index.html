@@ -656,7 +656,7 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
 </head>
 <body>
 <canvas id="confetti" aria-hidden="true"></canvas>
-<img class="printonly" src="invitation-onephoto.png" alt="Andrea's 60th Throwback Birthday invitation">
+<img class="printonly" src="invitation-final.png" alt="Andrea's 60th Throwback Birthday invitation">
 
 <style>
 .printonly { display: none; }
@@ -700,7 +700,7 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
         </div>
       </section>
       <section class="face back-face" aria-label="Andrea's 60th Throwback Thursday invitation">
-        <img src="invitation-onephoto.png" alt="You're invited: Andrea's 60th Throwback Birthday. Thursday, November 12th, 6:00 to 9:00 PM, at Il Fornaio. Please come celebrate with appetizers and cocktails. Andrea knows about the party, but she has no idea what's really in store. Dress code: blast from the past. Recreate the outfit you wore when you first met Andrea. Guests vote and the best throwback wins a prize. RSVP below or to Lou Baldacci or Colleen Carney.">
+        <img src="invitation-final.png" alt="You're invited: Andrea's 60th Throwback Birthday. Thursday, November 12th, 6:00 to 9:00 PM, at Il Fornaio. Please come celebrate with appetizers and cocktails. Andrea knows about the party, but she has no idea what's really in store. Dress code: blast from the past. Recreate the outfit you wore when you first met Andrea. Guests vote and the best throwback wins a prize. RSVP below or to Lou Baldacci or Colleen Carney.">
       </section>
     </div>
   </div>
@@ -731,7 +731,7 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
 <button class="skip" id="skip" type="button" hidden>Already opened it? Skip to the RSVP</button>
 
 <div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="Zoomed invitation" hidden>
-  <div class="viewer-scroll" id="vscroll"><img id="vimg" src="invitation-onephoto.png" alt="Andrea's 60th Throwback Birthday invitation, zoomed in" draggable="false"></div>
+  <div class="viewer-scroll" id="vscroll"><img id="vimg" src="invitation-final.png" alt="Andrea's 60th Throwback Birthday invitation, zoomed in" draggable="false"></div>
   <div class="viewer-bar">
     <button class="zbtn" id="v-out" type="button" aria-label="Zoom out">−</button>
     <span class="zpct" id="v-pct">150%</span>
@@ -891,7 +891,6 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
     presented = true;
     card.setAttribute('role', 'button');
     card.tabIndex = 0;
-    if (!fast) card.focus({ preventScroll: true });
   }
 
   const themeBtn = $('theme');
