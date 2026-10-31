@@ -295,7 +295,7 @@ img { max-width: 100%; }
 .btn.solid { color: var(--linen); background: linear-gradient(170deg, var(--gold-hi), var(--gold)); border-color: var(--gold-hi); font-weight: 600; }
 .btn.solid:hover { filter: brightness(1.08); }
 .btn:disabled { opacity: .6; cursor: wait; }
-.controls { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: -24px; position: relative; z-index: 10; }
+.controls { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: -10px; position: relative; z-index: 10; }
 
 /* Party page after the reveal */
 .party {
@@ -542,6 +542,84 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
 .themeswitch:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 3px; border-radius: 8px; }
 .switchrow { width: 100%; display: flex; justify-content: center; }
 
+/* Zoom: buttons under the card open a full-screen viewer you can scroll or drag around */
+.zoomrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: -18px;
+  position: relative;
+  z-index: 10;
+  font-family: "Oswald", "Avenir Next Condensed", "Arial Narrow", sans-serif;
+  font-size: 16px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--gold-hi);
+}
+.zbtn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid #ffd84a;
+  background: #0b1424;
+  color: #ffd84a;
+  font-family: "Oswald", "Avenir Next Condensed", sans-serif;
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 700;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 0 0 3px;
+}
+.zbtn:hover { background: #ff4fa3; border-color: #ff4fa3; color: #fff; }
+.zbtn:disabled { opacity: .4; cursor: default; background: #0b1424; border-color: #ffd84a; color: #ffd84a; }
+.zbtn:focus-visible, .zclose:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgba(5,8,20,.96);
+}
+.viewer-scroll {
+  position: absolute;
+  inset: 0 0 calc(84px + env(safe-area-inset-bottom, 0px)) 0;
+  overflow: auto;
+  cursor: grab;
+  touch-action: pan-x pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+.viewer-scroll.dragging { cursor: grabbing; }
+.viewer-scroll img { display: block; max-width: none; margin: 16px auto; user-select: none; -webkit-user-select: none; box-shadow: 0 10px 40px rgba(0,0,0,.6); border-radius: 6px; }
+.viewer-bar {
+  position: absolute;
+  left: 50%;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #0b1424;
+  border: 2px solid #ff4fa3;
+  border-radius: 999px;
+  padding: 6px 8px 6px 10px;
+  box-shadow: 4px 4px 0 #ffd84a;
+}
+.zpct { min-width: 54px; text-align: center; font-family: "Oswald", sans-serif; font-size: 17px; color: #fff; font-variant-numeric: tabular-nums; }
+.zclose {
+  font-family: "Oswald", "Avenir Next Condensed", sans-serif;
+  font-size: 17px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #fff;
+  background: #ff4fa3;
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 20px;
+  cursor: pointer;
+}
+
 #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 20; }
 @media (prefers-reduced-motion: reduce) {
   .piece, .flap, .cardwrap, .card, .seal .half, .turn { transition: none; }
@@ -621,6 +699,22 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
 
 <p class="caption" id="caption">Tap the red seal to open</p>
 <button class="skip" id="skip" type="button" hidden>Already opened it? Skip to the RSVP</button>
+
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="Zoomed invitation" hidden>
+  <div class="viewer-scroll" id="vscroll"><img id="vimg" src="throwback.png" alt="Andrea's 60th Throwback Thursday invitation, zoomed in" draggable="false"></div>
+  <div class="viewer-bar">
+    <button class="zbtn" id="v-out" type="button" aria-label="Zoom out">−</button>
+    <span class="zpct" id="v-pct">150%</span>
+    <button class="zbtn" id="v-in" type="button" aria-label="Zoom in">+</button>
+    <button class="zclose" id="v-close" type="button">Close</button>
+  </div>
+</div>
+
+<div class="zoomrow" id="zoomrow" hidden>
+  <span>Zoom</span>
+  <button class="zbtn" id="z-out" type="button" aria-label="Zoom out">−</button>
+  <button class="zbtn" id="z-in" type="button" aria-label="Zoom in to read the invitation">+</button>
+</div>
 
 <div class="controls" id="controls" hidden>
   <a class="btn solid" href="#rsvp">RSVP below</a>
@@ -784,6 +878,7 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
     revealed = !revealed;
     card.classList.toggle('flipped', revealed);
     setRetro(revealed);
+    $('zoomrow').hidden = !revealed;
     if (revealed && !fast) {
       await wait(900);
       if (!reduce) burst();
@@ -798,6 +893,68 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
   });
   $('again').addEventListener('click', () => turnOver(false));
   $('print').addEventListener('click', () => window.print());
+
+  // Zoom viewer
+  const viewer = $('viewer'), vscroll = $('vscroll'), vimg = $('vimg');
+  const levels = [1, 1.5, 2, 2.5, 3];
+  let zi = 0, lastFocus = null;
+  function baseWidth() { return Math.min(innerWidth - 32, 760); }
+  function applyZoom(keepCenter) {
+    const cx = vscroll.scrollLeft + vscroll.clientWidth / 2, cy = vscroll.scrollTop + vscroll.clientHeight / 2;
+    const oldW = vimg.offsetWidth || 1;
+    vimg.style.width = Math.round(baseWidth() * levels[zi]) + 'px';
+    $('v-pct').textContent = Math.round(levels[zi] * 100) + '%';
+    $('v-out').disabled = zi === 0;
+    $('v-in').disabled = zi === levels.length - 1;
+    if (keepCenter) {
+      const r = vimg.offsetWidth / oldW;
+      vscroll.scrollLeft = cx * r - vscroll.clientWidth / 2;
+      vscroll.scrollTop = cy * r - vscroll.clientHeight / 2;
+    }
+  }
+  function openViewer(level) {
+    lastFocus = document.activeElement;
+    zi = level;
+    viewer.hidden = false;
+    document.body.style.overflow = 'hidden';
+    applyZoom(false);
+    vscroll.scrollTop = 0;
+    vscroll.scrollLeft = (vscroll.scrollWidth - vscroll.clientWidth) / 2;
+    $('v-close').focus();
+  }
+  function closeViewer() {
+    viewer.hidden = true;
+    document.body.style.overflow = '';
+    if (lastFocus) lastFocus.focus({ preventScroll: true });
+  }
+  $('z-in').addEventListener('click', () => openViewer(1));
+  $('z-out').addEventListener('click', () => openViewer(0));
+  $('v-in').addEventListener('click', () => { if (zi < levels.length - 1) { zi++; applyZoom(true); } });
+  $('v-out').addEventListener('click', () => { if (zi > 0) { zi--; applyZoom(true); } });
+  $('v-close').addEventListener('click', closeViewer);
+  document.addEventListener('keydown', e => {
+    if (viewer.hidden) return;
+    if (e.key === 'Escape') closeViewer();
+    if (e.key === '+' || e.key === '=') $('v-in').click();
+    if (e.key === '-') $('v-out').click();
+  });
+  addEventListener('resize', () => { if (!viewer.hidden) applyZoom(true); });
+  // Drag to move around with a mouse; touch screens scroll natively.
+  let drag = null;
+  vscroll.addEventListener('pointerdown', e => {
+    if (e.pointerType !== 'mouse') return;
+    drag = { x: e.clientX, y: e.clientY, l: vscroll.scrollLeft, t: vscroll.scrollTop };
+    vscroll.classList.add('dragging');
+    vscroll.setPointerCapture(e.pointerId);
+  });
+  vscroll.addEventListener('pointermove', e => {
+    if (!drag) return;
+    vscroll.scrollLeft = drag.l - (e.clientX - drag.x);
+    vscroll.scrollTop = drag.t - (e.clientY - drag.y);
+  });
+  const endDrag = () => { drag = null; vscroll.classList.remove('dragging'); };
+  vscroll.addEventListener('pointerup', endDrag);
+  vscroll.addEventListener('pointercancel', endDrag);
   skip.addEventListener('click', async () => {
     card.style.transition = 'none';
     await open(true);
