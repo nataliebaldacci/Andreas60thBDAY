@@ -792,6 +792,9 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
           <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
         </select>
       </label>
+      <label for="r-msg">Leave a message for the Message Board <span class="hint">(optional)</span>
+        <textarea id="r-msg" name="message" maxlength="600" placeholder="Happy birthday, Andrea! Remember when…"></textarea>
+      </label>
       <div class="hp" aria-hidden="true"><label>Website <input type="text" id="r-website" name="website" tabindex="-1" autocomplete="off"></label></div>
       <button class="btn solid" type="submit" id="rsvp-btn">Send my RSVP</button>
       <p class="status" id="rsvp-status" role="status"></p>
@@ -803,26 +806,6 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
     </div>
   </section>
 
-  <section class="panel" id="photos" aria-labelledby="photo-h">
-    <h2 id="photo-h">Can’t Make It?</h2>
-    <p class="intro">Send in pictures of your throwback! We’ll share them with Andrea at the party.</p>
-    <form id="photo-form" novalidate>
-      <label for="p-name">Your name
-        <input type="text" id="p-name" name="name" maxlength="100" required>
-      </label>
-      <label for="p-file">Your throwback photos
-        <input type="file" id="p-file" name="photo" accept="image/*" multiple required>
-      </label>
-      <div class="previews" id="p-previews"></div>
-      <label for="p-caption">Caption (optional)
-        <input type="text" id="p-caption" name="caption" maxlength="500">
-      </label>
-      <div class="hp" aria-hidden="true"><label>Website <input type="text" id="p-website" name="website" tabindex="-1" autocomplete="off"></label></div>
-      <button class="btn solid" type="submit" id="photo-btn">Send my photos</button>
-      <p class="status" id="photo-status" role="status"></p>
-    </form>
-  </section>
-
   <section class="panel" aria-labelledby="who-h">
     <h2 id="who-h">Who’s Coming</h2>
     <div class="headcount"><b id="headcount">–</b><span id="headcount-label">guests so far</span></div>
@@ -831,20 +814,33 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
 
   <section class="panel" aria-labelledby="wall-h">
     <h2 id="wall-h">Message Board</h2>
-    <p class="intro">Want to add a message for the message board?</p>
-    <form id="memory-form" novalidate>
-      <label for="m-name">Your name
-        <input type="text" id="m-name" name="name" maxlength="100" required>
-      </label>
-      <label for="m-text">Your message for Andrea
-        <textarea id="m-text" name="text" maxlength="600" required></textarea>
-      </label>
-      <div class="hp" aria-hidden="true"><label>Website <input type="text" id="m-website" name="website" tabindex="-1" autocomplete="off"></label></div>
-      <button class="btn solid" type="submit" id="memory-btn">Post my message</button>
-      <p class="status" id="memory-status" role="status"></p>
-    </form>
+    <p class="intro">Notes for Andrea from everyone who RSVP’d. Add yours with your RSVP above.</p>
     <div class="wall" id="wall"></div>
   </section>
+
+  <section class="panel" id="photos" aria-labelledby="photo-h">
+    <h2 id="photo-h">Can’t Make It?</h2>
+    <p class="intro">Send in pictures of your throwback and leave Andrea a note. We’ll share them with her at the party.</p>
+    <form id="photo-form" novalidate>
+      <label for="p-name">Your name
+        <input type="text" id="p-name" name="name" maxlength="100" required>
+      </label>
+      <label for="p-file">Your throwback photos <span class="hint">(optional)</span>
+        <input type="file" id="p-file" name="photo" accept="image/*" multiple>
+      </label>
+      <div class="previews" id="p-previews"></div>
+      <label for="p-caption">Caption (optional)
+        <input type="text" id="p-caption" name="caption" maxlength="500">
+      </label>
+      <label for="p-msg">A message for Andrea <span class="hint">(optional, goes on the Message Board)</span>
+        <textarea id="p-msg" name="message" maxlength="600"></textarea>
+      </label>
+      <div class="hp" aria-hidden="true"><label>Website <input type="text" id="p-website" name="website" tabindex="-1" autocomplete="off"></label></div>
+      <button class="btn solid" type="submit" id="photo-btn">Send</button>
+      <p class="status" id="photo-status" role="status"></p>
+    </form>
+  </section>
+
 
   <footer>Questions or outfit help? Message Natalie.</footer>
 </div>
@@ -1090,6 +1086,8 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
     btn.disabled = true; btn.textContent = 'Sending…'; st.textContent = '';
     try {
       await api(body);
+      const msg = $('r-msg').value.trim();
+      if (msg) { await api({ type: 'memory', name, text: msg, website: '' }); $('r-msg').value = ''; }
       store.set('rsvp', JSON.stringify({ attending: att.value, name }));
       showDone({ attending: att.value, name });
       if (att.value === 'yes' && !reduce) burst();
@@ -1138,7 +1136,8 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
     const name = $('p-name').value.trim();
     const files = [...pfile.files].slice(0, 10);
     if (!name) { st.className = 'status err'; st.textContent = 'Please enter your name.'; $('p-name').focus(); return; }
-    if (!files.length) { st.className = 'status err'; st.textContent = 'Please choose at least one photo.'; return; }
+    const msg = $('p-msg').value.trim();
+    if (!files.length && !msg) { st.className = 'status err'; st.textContent = 'Please add a photo or a message.'; return; }
     const btn = $('photo-btn');
     btn.disabled = true; st.className = 'status';
     try {
@@ -1147,37 +1146,19 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
         const image = await shrink(files[i]);
         await api({ type: 'photo', name, caption: $('p-caption').value, image, website: $('p-website').value });
       }
+      if (msg) { btn.textContent = 'Sending…'; await api({ type: 'memory', name, text: msg, website: $('p-website').value }); }
       pfile.value = '';
       $('p-previews').replaceChildren();
       $('p-caption').value = '';
+      $('p-msg').value = '';
       st.className = 'status ok';
-      st.textContent = files.length > 1 ? 'All ' + files.length + ' photos sent. Thank you!' : 'Photo sent. Thank you!';
+      st.textContent = 'Sent! Thank you. Andrea will love it.';
+      load();
       if (!reduce) burst();
     } catch (err) {
       st.className = 'status err'; st.textContent = err.message;
     } finally {
-      btn.disabled = false; btn.textContent = 'Send my photos';
-    }
-  });
-
-  // Memory wall
-  const mform = $('memory-form');
-  mform.addEventListener('submit', async e => {
-    e.preventDefault();
-    const st = $('memory-status');
-    const name = $('m-name').value.trim(), text = $('m-text').value.trim();
-    if (!name || !text) { st.className = 'status err'; st.textContent = 'Please add your name and a message.'; return; }
-    const btn = $('memory-btn');
-    btn.disabled = true; btn.textContent = 'Sending…'; st.textContent = '';
-    try {
-      await api({ type: 'memory', name, text, website: $('m-website').value });
-      $('m-text').value = '';
-      st.className = 'status ok'; st.textContent = 'Posted! Thank you. Andrea will love it.';
-      load();
-    } catch (err) {
-      st.className = 'status err'; st.textContent = err.message;
-    } finally {
-      btn.disabled = false; btn.textContent = 'Post my message';
+      btn.disabled = false; btn.textContent = 'Send';
     }
   });
 
