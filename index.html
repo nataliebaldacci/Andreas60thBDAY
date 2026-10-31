@@ -648,6 +648,78 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
   cursor: pointer;
 }
 
+
+/* Evite-style party page: plain white cards and easy-to-read text below the invitation, in both themes */
+html body .party { font-family: "Poppins", "Avenir Next", "Helvetica Neue", Arial, sans-serif; font-size: 16px; gap: 16px; }
+html body .party .panel {
+  background: #ffffff;
+  color: #221c26;
+  border: 0;
+  border-radius: 14px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.25);
+  padding: 22px 20px;
+  gap: 14px;
+  transform: none;
+}
+html body .party .panel::before { display: none; }
+html body .party .panel h2 {
+  font-family: "Poppins", "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.25;
+  color: #221c26;
+  text-shadow: none;
+  transform: none;
+  text-align: left;
+}
+html body .party .panel .intro { text-align: left; font-style: normal; color: #5b5361; font-size: 15px; }
+html body .party label, html body .party .lbl {
+  font-family: inherit; font-size: 14px; font-weight: 600; letter-spacing: 0; text-transform: none; color: #221c26;
+}
+html body .party .hint { font-family: inherit; font-style: normal; font-weight: 400; font-size: 13px; color: #6f6775; text-transform: none; letter-spacing: 0; }
+html body .party input[type=text], html body .party input[type=email], html body .party textarea, html body .party select, html body .party input[type=file] {
+  background: #fff; color: #221c26; border: 1px solid #d6d0da; border-radius: 10px; font-size: 16px; font-family: inherit;
+}
+html body .party textarea { min-height: 70px; }
+html body .party select option { color: #221c26; }
+html body .party .choice label {
+  font-family: inherit; font-size: 15px; font-weight: 500; color: #221c26; background: #fff; border: 1.5px solid #d6d0da; border-radius: 10px; letter-spacing: 0; text-transform: none;
+}
+html body .party .choice label { justify-content: center; min-height: 52px; padding: 10px 8px; }
+html body .party .choice label:has(input:checked) { background: #e2377f; border-color: #e2377f; color: #fff; }
+html body .party .btn.solid {
+  font-family: inherit; font-size: 16px; font-weight: 600; letter-spacing: 0; text-transform: none;
+  background: #e2377f; color: #fff; border: 0; border-radius: 10px; box-shadow: none; padding: 13px 20px;
+}
+html body .party .btn.solid:hover { filter: brightness(1.06); }
+html body .party .status.ok { color: #1f7a4a; }
+html body .party .status.err { color: #b3123f; }
+html body .party .done p:first-child { font-family: inherit; font-size: 22px; font-weight: 600; color: #221c26; text-shadow: none; }
+html body .party .done { color: #3a3340; }
+html body .party .skip { color: #b3123f; font-family: inherit; font-style: normal; }
+html body .party .headcount { text-align: left; display: flex; align-items: baseline; gap: 8px; }
+html body .party .headcount b { font-family: inherit; font-size: 32px; font-weight: 700; color: #e2377f; text-shadow: none; }
+html body .party .headcount span { font-family: inherit; font-size: 15px; letter-spacing: 0; text-transform: none; color: #5b5361; font-weight: 500; }
+html body .party .names { justify-content: flex-start; gap: 6px; }
+html body .party .names li { font-family: inherit; font-size: 14px; letter-spacing: 0; color: #221c26; background: #f4f1f6; border: 0; border-radius: 999px; padding: 5px 12px; }
+html body .party .wall { grid-template-columns: 1fr; gap: 10px; }
+html body .party .memory { transform: none; background: #f7f5f8; color: #221c26; box-shadow: none; border-radius: 10px; padding: 12px 14px; gap: 4px; }
+html body .party .memory p { font-size: 15px; }
+html body .party .memory cite { font-family: inherit; font-size: 13px; font-weight: 600; color: #6f6775; align-self: flex-start; order: -1; }
+html body .party .empty { text-align: left; font-style: normal; color: #6f6775; }
+html body .party .countdown .label { font-family: inherit; letter-spacing: .02em; text-transform: none; font-size: 15px; color: #f3e8ee; font-weight: 500; }
+html body .party .clock b { font-family: inherit; font-weight: 700; color: #fff; text-shadow: none; }
+html body .party .clock span { font-family: inherit; letter-spacing: .04em; text-transform: uppercase; color: #e8d8e2; font-size: 12px; }
+html body .party footer { font-family: inherit; letter-spacing: 0; text-transform: none; color: #e8d8e2; font-size: 14px; }
+html body .party .previews img { border-color: #d6d0da; }
+html body .party input[type=file]::file-selector-button { font-family: inherit; letter-spacing: 0; background: #f4f1f6; color: #221c26; }
+/* Can't Make It stays folded until opened */
+.cantmake summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.cantmake summary::-webkit-details-marker { display: none; }
+.cantmake summary::after { content: "+"; font-size: 26px; font-weight: 400; color: #e2377f; line-height: 1; }
+.cantmake[open] summary::after { content: "–"; }
+.cantmake[open] summary { margin-bottom: 12px; }
+
 #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 20; }
 @media (prefers-reduced-motion: reduce) {
   .piece, .flap, .cardwrap, .card, .seal .half, .turn { transition: none; }
@@ -769,11 +841,10 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
   </section>
 
   <section class="panel" id="rsvp">
-    <h2>Kindly Reply</h2>
-    <p class="intro">Andrea knows the when and where, not the rest. Please keep the surprise!</p>
+    <h2>Will you be there?</h2>
+    <p class="intro">Andrea knows about the party, not the throwback twist. Please keep it a surprise!</p>
     <form id="rsvp-form" novalidate>
       <div class="lbl" role="radiogroup" aria-label="Will you be there?">
-        Will you be there?
         <div class="choice">
           <label><input type="radio" name="attending" id="att-yes" value="yes" required><span>Yes, I’ll be there!</span></label>
           <label><input type="radio" name="attending" id="att-maybe" value="maybe"><span>Maybe</span></label>
@@ -814,12 +885,13 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
 
   <section class="panel" aria-labelledby="wall-h">
     <h2 id="wall-h">Message Board</h2>
-    <p class="intro">Notes for Andrea from everyone who RSVP’d. Add yours with your RSVP above.</p>
+    <p class="intro">Add yours when you RSVP.</p>
     <div class="wall" id="wall"></div>
   </section>
 
-  <section class="panel" id="photos" aria-labelledby="photo-h">
-    <h2 id="photo-h">Can’t Make It?</h2>
+  <section class="panel" id="photos">
+    <details class="cantmake">
+    <summary><h2 id="photo-h">Can’t make it?</h2></summary>
     <p class="intro">Send in pictures of your throwback and leave Andrea a note. We’ll share them with her at the party.</p>
     <form id="photo-form" novalidate>
       <label for="p-name">Your name
@@ -839,6 +911,7 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
       <button class="btn solid" type="submit" id="photo-btn">Send</button>
       <p class="status" id="photo-status" role="status"></p>
     </form>
+    </details>
   </section>
 
 
