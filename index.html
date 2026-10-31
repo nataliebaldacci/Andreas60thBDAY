@@ -10,15 +10,15 @@
 <meta property="og:description" content="Break the seal to open your invitation.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://nataliebaldacci.github.io/Andreas60thBDAY/">
-<meta property="og:image" content="https://nataliebaldacci.github.io/Andreas60thBDAY/og-envelope.jpg">
-<meta property="og:image:secure_url" content="https://nataliebaldacci.github.io/Andreas60thBDAY/og-envelope.jpg">
+<meta property="og:image" content="https://nataliebaldacci.github.io/Andreas60thBDAY/og-invite.jpg">
+<meta property="og:image:secure_url" content="https://nataliebaldacci.github.io/Andreas60thBDAY/og-invite.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1000">
-<meta property="og:image:height" content="1200">
-<meta property="og:image:alt" content="A pink envelope sealed with a red wax seal">
+<meta property="og:image:height" content="1292">
+<meta property="og:image:alt" content="You're invited: a pink envelope sealed with a red wax seal">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://nataliebaldacci.github.io/Andreas60thBDAY/og-envelope.jpg">
-<link rel="apple-touch-icon" href="og-envelope.jpg">
+<meta name="twitter:image" content="https://nataliebaldacci.github.io/Andreas60thBDAY/og-invite.jpg">
+<link rel="apple-touch-icon" href="og-invite.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+SC:wght@500;600&family=Kaushan+Script&family=Oswald:wght@500;700&family=Poppins:wght@400;600&display=swap">
@@ -284,6 +284,21 @@ img { max-width: 100%; }
 .scene.gone .piece, .scene.gone .seal { visibility: hidden; }
 .card:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 6px; border-radius: 8px; }
 
+.invited {
+  font-family: "Oswald", "Avenir Next Condensed", "Arial Narrow", sans-serif;
+  font-weight: 700;
+  font-size: clamp(30px, 8vw, 44px);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--gold-hi);
+  text-shadow: 0 2px 0 rgba(0,0,0,.35);
+  display: flex;
+  align-items: center;
+  gap: .5em;
+  margin-bottom: -4px;
+}
+.invited span { font-size: .6em; color: var(--gold); }
 .caption { font-family: "Oswald", "Avenir Next Condensed", "Arial Narrow", sans-serif; font-weight: 700; font-size: 22px; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-hi); text-align: center; }
 .skip { font-family: var(--serif); font-style: italic; font-size: 16px; color: var(--muted); background: none; border: 0; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 4px; }
 .skip:hover { color: var(--gold-hi); }
@@ -661,6 +676,8 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
 }
 </style>
 
+<p class="invited" id="invited"><span aria-hidden="true">★</span> You’re Invited <span aria-hidden="true">★</span></p>
+
 <main class="scene" id="scene">
   <div class="piece back" aria-hidden="true"></div>
   <div class="cardwrap">
@@ -855,6 +872,7 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
 
   async function open(fast) {
     caption.hidden = true;
+    $('invited').hidden = true;
     skip.hidden = true;
     const step = fast ? () => Promise.resolve() : wait;
     scene.classList.add('broken');
