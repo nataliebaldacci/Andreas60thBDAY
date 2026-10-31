@@ -373,7 +373,8 @@ input[type=text], input[type=email], textarea, select {
 }
 textarea { resize: vertical; min-height: 84px; }
 select option { color: #222; }
-.choice { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.choice { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 480px) { .choice { grid-template-columns: 1fr; } }
 .choice input { position: absolute; opacity: 0; pointer-events: none; }
 .choice label {
   font-family: var(--serif);
@@ -775,6 +776,7 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
         Will you be there?
         <div class="choice">
           <label><input type="radio" name="attending" id="att-yes" value="yes" required><span>Yes, I’ll be there!</span></label>
+          <label><input type="radio" name="attending" id="att-maybe" value="maybe"><span>Maybe</span></label>
           <label><input type="radio" name="attending" id="att-no" value="no"><span>Sorry, I can’t make it</span></label>
         </div>
       </div>
@@ -1061,9 +1063,11 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
   function showDone(d) {
     rform.hidden = true;
     $('rsvp-done').hidden = false;
-    $('done-title').textContent = d.attending === 'yes' ? 'Grazie!' : 'We’ll miss you';
+    $('done-title').textContent = d.attending === 'yes' ? 'Grazie!' : d.attending === 'maybe' ? 'Hope you can make it!' : 'We’ll miss you';
     $('done-text').textContent = d.attending === 'yes'
       ? 'See you Thursday, November 12 at 6 PM, ' + d.name + '. Start planning that throwback look!'
+      : d.attending === 'maybe'
+      ? 'Thanks, ' + d.name + '! Tap Change my RSVP below once you know for sure.'
       : 'Thank you for letting us know, ' + d.name + '. Send in a picture of your throwback below so you can be there in spirit!';
   }
   $('rsvp-change').addEventListener('click', () => { rform.hidden = false; $('rsvp-done').hidden = true; });
