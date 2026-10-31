@@ -535,6 +535,26 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
 </head>
 <body>
 <canvas id="confetti" aria-hidden="true"></canvas>
+<img class="printonly" src="throwback-print.png" alt="Andrea's 60th Throwback Thursday invitation">
+
+<style>
+.printonly { display: none; }
+@page { size: letter portrait; margin: 0.4in; }
+@media print {
+  html, body { background: #fff !important; padding: 0 !important; margin: 0 !important; display: block !important; }
+  body::before { display: none !important; }
+  body > *:not(.printonly) { display: none !important; }
+  .printonly {
+    display: block !important;
+    width: auto;
+    max-width: 100%;
+    max-height: 10.1in;
+    margin: 0 auto;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+</style>
 
 <main class="scene" id="scene">
   <div class="piece back" aria-hidden="true"></div>
@@ -589,6 +609,7 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
 <div class="controls" id="controls" hidden>
   <a class="btn solid" href="#rsvp">RSVP below</a>
   <button class="btn" id="again" type="button">Turn back over</button>
+  <button class="btn" id="print" type="button">Print the invitation</button>
   <div class="switchrow">
     <button class="themeswitch" id="theme" type="button" role="switch" aria-checked="false">
       <span>Classic</span><span class="track" aria-hidden="true"><span class="knob"></span></span><span>Throwback</span>
@@ -760,6 +781,7 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); turnOver(false); }
   });
   $('again').addEventListener('click', () => turnOver(false));
+  $('print').addEventListener('click', () => window.print());
   skip.addEventListener('click', async () => {
     card.style.transition = 'none';
     await open(true);
