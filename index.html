@@ -203,11 +203,29 @@ img { max-width: 100%; }
 .corner.tr { top: 2.6cqw; right: 2.6cqw; transform: scaleX(-1); }
 .corner.bl { bottom: 2.6cqw; left: 2.6cqw; transform: scaleY(-1); }
 .corner.br { bottom: 2.6cqw; right: 2.6cqw; transform: scale(-1,-1); }
-.eyebrow { font-family: var(--caps); font-weight: 600; font-size: 4.1cqw; letter-spacing: .14em; line-height: 1.35; }
+.eyebrow { font-family: var(--caps); font-weight: 600; font-size: 6cqw; letter-spacing: .12em; line-height: 1.35; }
+.clickhere {
+  font-family: "Oswald", "Avenir Next Condensed", "Arial Narrow", sans-serif;
+  font-weight: 700;
+  font-size: 8cqw;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: linear-gradient(170deg, var(--seal-hi), var(--seal));
+  border-radius: 999px;
+  padding: 2.4cqw 9cqw;
+  margin-bottom: 4cqw;
+  box-shadow: 0 1.4cqw 3cqw rgba(60,10,30,.35);
+  opacity: 0;
+  transition: opacity .5s ease .3s;
+  animation: nudge 1.8s ease-in-out infinite;
+}
+@keyframes nudge { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+.scene.presented .clickhere { opacity: 1; }
 .lede { font-style: italic; font-size: 4.6cqw; }
 .name {
   font-family: var(--script);
-  font-size: 19cqw;
+  font-size: 23cqw;
   line-height: 1;
   background: linear-gradient(170deg, var(--gold-hi), var(--gold) 45%, #8a6424 80%);
   -webkit-background-clip: text;
@@ -216,11 +234,11 @@ img { max-width: 100%; }
   color: var(--gold);
   padding: 1cqw 3cqw 2cqw;
 }
-.occasion { font-family: var(--caps); font-weight: 600; font-size: 6cqw; letter-spacing: .18em; margin-top: -2cqw; }
+.occasion { font-family: var(--caps); font-weight: 600; font-size: 8.5cqw; letter-spacing: .12em; margin-top: -2cqw; }
 .rule { width: 46cqw; height: auto; color: var(--gold); }
-.when { font-size: 5cqw; line-height: 1.35; font-weight: 500; }
+.when { font-size: 7cqw; line-height: 1.35; font-weight: 600; }
 .hours { font-style: italic; font-size: 4.4cqw; margin-top: -1.4cqw; }
-.where { font-family: var(--caps); font-size: 6.2cqw; letter-spacing: .2em; font-weight: 600; }
+.where { font-family: var(--caps); font-size: 8.5cqw; letter-spacing: .1em; font-weight: 600; }
 .sub { font-style: italic; font-size: 3.9cqw; opacity: .8; }
 .turn {
   margin-top: 3cqw;
@@ -253,7 +271,7 @@ img { max-width: 100%; }
 .scene.gone .piece, .scene.gone .seal { visibility: hidden; }
 .card:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 6px; border-radius: 8px; }
 
-.caption { font-family: var(--caps); font-size: 17px; letter-spacing: .22em; color: var(--gold-hi); text-align: center; }
+.caption { font-family: "Oswald", "Avenir Next Condensed", "Arial Narrow", sans-serif; font-weight: 700; font-size: 22px; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-hi); text-align: center; }
 .skip { font-family: var(--serif); font-style: italic; font-size: 16px; color: var(--muted); background: none; border: 0; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 4px; }
 .skip:hover { color: var(--gold-hi); }
 
@@ -509,7 +527,7 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
 #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 20; }
 @media (prefers-reduced-motion: reduce) {
   .piece, .flap, .cardwrap, .card, .seal .half, .turn { transition: none; }
-  .seal::after { animation: none; }
+  .seal::after, .clickhere { animation: none; }
 }
 </style>
 </head>
@@ -526,16 +544,13 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
           <svg class="corner tr" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 38V8a6 6 0 0 1 6-6h30"/><path d="M8 30c0-12 10-22 22-22"/><circle cx="8" cy="8" r="2.2" fill="currentColor"/></svg>
           <svg class="corner bl" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 38V8a6 6 0 0 1 6-6h30"/><path d="M8 30c0-12 10-22 22-22"/><circle cx="8" cy="8" r="2.2" fill="currentColor"/></svg>
           <svg class="corner br" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 38V8a6 6 0 0 1 6-6h30"/><path d="M8 30c0-12 10-22 22-22"/><circle cx="8" cy="8" r="2.2" fill="currentColor"/></svg>
-          <p class="eyebrow">The pleasure of your company<br>is requested</p>
-          <p class="lede">at a quiet dinner in honor of</p>
+          <span class="clickhere" id="clickhere">Click here</span>
+          <p class="eyebrow">You’re invited to</p>
           <p class="name">Andrea’s</p>
           <p class="occasion">60th Birthday</p>
           <svg class="rule" viewBox="0 0 200 14" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M0 7h80M120 7h80"/><path d="M100 1l6 6-6 6-6-6z" fill="currentColor"/><circle cx="86" cy="7" r="1.6" fill="currentColor"/><circle cx="114" cy="7" r="1.6" fill="currentColor"/></svg>
-          <p class="when">Thursday, the twelfth of November<br>two thousand twenty-six</p>
-          <p class="hours">six until nine o’clock in the evening</p>
-          <p class="where">Il Fornaio</p>
-          <p class="sub">Cena per pochi amici</p>
-          <p class="turn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3L20 9"/><path d="M20 4v5h-5"/><path d="M20 12a8 8 0 0 1-14 5.3L4 15"/><path d="M4 20v-5h5"/></svg>Tap to turn over</p>
+          <p class="where">at Il Fornaio</p>
+          <p class="when">Thursday, November 12</p>
         </div>
       </section>
       <section class="face back-face" aria-label="Andrea's 60th Throwback Thursday invitation">
@@ -566,7 +581,7 @@ body.retro .skip { color: var(--muted); font-family: var(--serif); }
   </button>
 </main>
 
-<p class="caption" id="caption">Break the seal to open</p>
+<p class="caption" id="caption">Tap the red seal to open</p>
 <button class="skip" id="skip" type="button" hidden>Already opened it? Skip to the RSVP</button>
 
 <div class="controls" id="controls" hidden>
